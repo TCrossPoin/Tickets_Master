@@ -1,0 +1,348 @@
+/* style.css */
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f2f2f2;
+}
+
+.container {
+  max-width: 500px;
+  margin: 30px auto;
+  padding: 20px;
+}
+
+
+h2, h3, h4 {
+  margin-top: 0;
+  color: #333;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+select,
+textarea {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+textarea {
+  resize: vertical;
+}
+
+button,
+.btn {
+  display: inline-block;
+  padding: 10px 18px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  text-decoration: none;
+  margin-top: 10px;
+}
+
+button:hover,
+.btn:hover {
+  background-color: #0056b3;
+}
+
+
+
+/* Table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #007bff;
+  color: white;
+}
+
+/* Comments */
+.comment {
+  background: #f9f9f9;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+/* Applies ONLY to pages with .dashboard-page class */
+.dashboard-page {
+  max-width: 1200px;
+  margin: 30px auto;
+  padding: 20px;
+}
+
+.dashboard-page .table-wrapper {
+  overflow-x: auto;
+  width: 100%;
+}
+
+.dashboard-page th,
+.dashboard-page td {
+  white-space: nowrap;
+}
+/* Make filter dropdowns smaller and aligned */
+.filter-container select {
+  width: auto;
+  min-width: 120px;
+  padding: 6px 10px;
+  font-size: 14px;
+  margin-right: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+
+/* Responsive for mobile */
+@media screen and (max-width: 600px) {
+  .container {
+  max-width: 2500px;  /* ✅ increased width */
+  margin: 30px auto;
+  padding: 20px;
+}
+
+.table-wrapper {
+  overflow-x: auto;    /* ✅ handles overflow gracefully */
+}
+
+
+  table, thead, tbody, th, td, tr {
+    display: block;
+  }
+
+  tr {
+    margin-bottom: 15px;
+  }
+
+  th {
+    background: #eee;
+    color: #333;
+  }
+
+  td {
+    border: none;
+    position: relative;
+    padding-left: 50%;
+  }
+
+  td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 10px;
+    font-weight: bold;
+    color: #555;
+  }
+}
+.input-group {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+.input-group input,
+.input-group select {
+            width: 100%;
+            padding: 10px 10px 10px 35px; /* left padding for icon */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+.input-group .icon {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+            font-size: 16px;
+            pointer-events: none; /* icon won't block clicking input */
+        }
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* space between checkbox and label */
+  margin-bottom: 15px;
+}
+
+.checkbox-group input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.checkbox-group label {
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+/* Header + Logout neatly aligned */
+.form-card .dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logout-btn {
+  background-color: #dc3545;
+}
+
+.logout-btn:hover {
+  background-color: #a71d2a;
+}
+/* ✅ Background Image for Login */
+body {
+  background: url('/static/fbg.jpg') no-repeat center center fixed;
+  background-size: 100% 100%;
+   background-position: center;
+    background-attachment: fixed; 
+}
+
+/* ✅ Login form layout */
+.login-container {
+ display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 80px;
+}
+
+.login-form {
+    background: rgba(255, 255, 255, 0.2); /* Transparent glassy layer */
+    backdrop-filter: blur(6px);           /* Soft blur for glass effect */
+    -webkit-backdrop-filter: blur(6px);   /* Safari support */
+    border-radius: 15px;                  /* Rounded corners for elegance */
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    padding: 30px;                        /* Comfortable inner spacing */
+    color: #fff;   
+    
+   width: 300px;            /* Direct width control */
+    max-width: 90vw;
+}
+
+/* ✅ Header logo and title */
+.login-header {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.login-logo {
+    height: 45px; /* Adjust this to fine-tune the logo size */
+    width: auto; /* Maintain aspect ratio */
+    background: rgba(112, 175, 247, 0.2); /* Semi-transparent glass look */
+    backdrop-filter: blur(5px); /* Add blur to background behind logo */
+    -webkit-backdrop-filter: blur(5px); /* Safari support */
+     /* Optional: rounded edges */
+    padding: 5px;
+}
+
+.app-title {
+  color: white;      /* much bigger */
+  font-weight: 900;
+  text-shadow: 1px 1px 3px #000;
+  letter-spacing: 1.5px;
+  line-height: 60px;
+  font-size: 55px; /* Adjust if needed */
+    margin-left: 5px;    /* vertically center with logo */
+}
+
+.signup-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 40px;
+}
+
+.signup-form {
+    background: rgba(255, 255, 255, 0.2); /* Transparent glassy layer */
+    backdrop-filter: blur(6px);           /* Soft blur for glass effect */
+    -webkit-backdrop-filter: blur(6px);   /* Safari support */
+    border-radius: 15px;                  /* Rounded corners for elegance */
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    padding: 30px;                        /* Comfortable inner spacing */
+    color: #fff;                          /* Light text over dark background */
+   width: 400px;            /* Direct width control */
+    max-width: 90vw;
+}
+
+.form-card {
+    background: rgba(255, 255, 255, 0.2);        /* Light glass effect */
+    backdrop-filter: blur(7px);                  /* Soft blur */
+    -webkit-backdrop-filter: blur(7px);          /* Safari support */
+    border-radius: 10px;                         /* Rounded corners */
+    box-shadow: 0 4px 30px rgba(22, 22, 22, 0.1);    /* Gentle shadow for depth */
+    padding: 8px;                               /* Inner spacing */
+    margin-bottom: 5px;                         /* Space between cards */
+    color: #111111;                                 /* Light text */
+       
+}
+p.description {
+    max-height: 150px;
+    overflow-y: auto;
+}
+.password-group {
+    position: relative;
+}
+
+.password-group input[type="password"],
+.password-group input[type="text"] {
+    width: 100%;
+    padding-right: 40px; /* space for the eye icon */
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #555;
+}
+.alert-success { background-color: #d4edda; color: #155724; }
+.alert-error   { background-color: #f8d7da; color: #721c24; }
+.form-card {
+  position: relative;      /* for absolute positioning inside */
+  overflow: visible !important;  /* prevent clipping dropdown */
+}
+
+#filterDropdown {
+  position: absolute;
+  top: 40px;     /* below hamburger */
+  right: 10px;
+  background: #222;
+  color: antiquewhite;
+  border: 1px solid #444;
+  border-radius: 4px;
+  min-width: 160px;
+  z-index: 9999;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+#filterDropdown a.filter-option:hover {
+  background-color: #444;
+  color: white;
+}
+
+.form-card + .form-card {
+    margin-top: 3px;
+}

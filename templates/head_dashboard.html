@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container dashboard-page">
+    <h1 class="title" style="color: bisque;"><i class="fa-solid fa-user-shield"></i> Head Dashboard</h1>
+
+    <div class="form-card" style="position: relative;">
+        <h2 style="color: beige;"><i class="fa fa-user"></i> Welcome, {{ name }}</h2>
+        <a class="btn logout-btn" href="/logout"><i class="fa fa-sign-out-alt"></i> Logout</a>
+
+        <!-- Hamburger menu -->
+        <div style="position: absolute; top: 10px; right: 10px; cursor: pointer;" id="filterMenuBtn">
+            <i class="fa fa-bars fa-2x" style="color: bisque;"></i>
+        </div>
+
+        <!-- Dropdown menu -->
+        <div id="filterDropdown" style="display: none; position: absolute; top: 40px; right: 10px; background: #222; color: bisque; border: 1px solid #444; border-radius: 4px; min-width: 150px; z-index: 100;">
+            <a href="#" class="filter-option" data-status="Open" style="display: block; padding: 10px; color: bisque; text-decoration: none;">Open</a>
+            <a href="#" class="filter-option" data-status="In Progress" style="display: block; padding: 10px; color: bisque; text-decoration: none;">In Progress</a>
+            <a href="#" class="filter-option" data-status="Resolved" style="display: block; padding: 10px; color: bisque; text-decoration: none;">Resolved</a>
+            <a href="#" class="filter-option" data-status="All" style="display: block; padding: 10px; color: bisque; text-decoration: none;">All</a>
+        </div>
+    </div>
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div>
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <div class="table-wrapper">
+        <table id="ticketTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Type</th>
+                    <th>Priority</th>
+                    <th>Status</th>
+                    <th>Assigned To</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for t in tickets %}
+                <tr data-status="{{ t[2] }}">
+                    <td>{{ t[0] }}</td>
+                    <td>{{ t[1] }}</td>
+                    <td>{{ t[6] }}</td>
+                    <td>{{ t[3] }}</td>
+                    <td>{{ t[2] }}</td>
+                    <td>{% if t[5] %}{{ t[5] }}{% else %}Not Assigned{% endif %}</td>
+                    <td>
+                        <a href="{{ url_for('view_ticket', ticket_id=t[0]) }}" class="btn btn-info">View</a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="7" style="text-align:center;">No tickets found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+  window.onload = function() {
+    const filterBtn = document.getElementById('filterMenuBtn');
+    const filterDropdown = document.getElementById('filterDropdown');
+    const filterOptions = document.querySelectorAll('.filter-option');
+    const ticketTableRows = document.querySelectorAll('#ticketTable tbody tr');
+
+    // Show/hide dropdown on hamburger click
+    filterBtn.addEventListener('click', () => {
+      filterDropdown.style.display = (filterDropdown.style.display === 'block') ? 'none' : 'block';
+    });
+
+    // Close dropdown if clicked outside
+    document.addEventListener('click', (e) => {
+      if (!filterBtn.contains(e.target) && !filterDropdown.contains(e.target)) {
+        filterDropdown.style.display = 'none';
+      }
+    });
+
+    // Function to filter tickets
+    function filterTickets(status) {
+      ticketTableRows.forEach(row => {
+        if (status === 'All' || row.dataset.status === status) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+
+    // Default filter to show Open tickets
+    filterTickets('Open');
+
+    // Handle clicking filter options
+    filterOptions.forEach(option => {
+      option.addEventListener('click', e => {
+        e.preventDefault();
+        const status = option.dataset.status;
+        filterTickets(status);
+        filterDropdown.style.display = 'none';
+      });
+    });
+  };
+</script>
+
+{% endblock %}

@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container dashboard-page">
+  <div class="form-card">
+    <!-- Hamburger menu fixed top-right -->
+    <div id="filterMenuBtn" 
+         style="position: absolute; top: 10px; right: 10px; cursor: pointer; z-index: 110;">
+      <i class="fa fa-bars fa-2x" style="color: antiquewhite;"></i>
+    </div>
+    <h2 style="color: bisque;"><i class="fa-solid fa-tachometer-alt"></i> Welcome, {{ name }}!</h2>
+   
+    <a href="/submit_ticket" class="btn"><i class="fa fa-plus-circle"></i> Create New Ticket</a>
+    <a class="btn logout-btn" href="/logout"><i class="fa fa-sign-out-alt"></i> Logout</a>
+ <p style="color: antiquewhite;">Below is a list of your submitted tickets.</p>
+    <!-- Dropdown menu -->
+    <div id="filterDropdown" style="display: none; position: absolute; top: 40px; right: 10px; background: #222; color: bisque; border: 1px solid #444; border-radius: 4px; min-width: 150px; z-index: 100;">
+      <a href="#" class="filter-option" data-status="Open" style="display: block; padding: 10px; color: bisque; text-decoration: none;">Open</a>
+      <a href="#" class="filter-option" data-status="In Progress" style="display: block; padding: 10px; color: bisque; text-decoration: none;">In Progress</a>
+      <a href="#" class="filter-option" data-status="Resolved" style="display: block; padding: 10px; color: bisque; text-decoration: none;">Resolved</a>
+    <a href="#" class="filter-option" data-status="All" style="padding: 10px; color: antiquewhite; text-decoration: none; display: block;">All</a>
+  </div>
+<div class="container dashboard-page">
+  <div class="form-card">
+    <h3 style="color: blanchedalmond;"><i class="fa fa-ticket"></i> Your Tickets</h3>
+
+    {% if tickets %}
+      <div class="table-wrapper">
+        <table id="ticketTable" class="ticket-table">
+          <thead>
+            <tr>
+              <th>Ticket #</th>
+              <th>Title</th>
+              <th>Status</th>
+              <th>Priority</th>
+              <th>Created At</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for ticket in tickets %}
+            <tr data-status="{{ ticket[2] }}">
+              <td>{{ ticket[0] }}</td>
+              <td>{{ ticket[1] }}</td>
+              <td>{{ ticket[2] }}</td>
+              <td>{{ ticket[3] }}</td>
+              <td>{{ ticket[4] }}</td>
+              <td>
+                <a class="btn btn-info" href="{{ url_for('view_ticket', ticket_id=ticket[0]) }}">
+                  <i class="fa fa-eye"></i> View
+                </a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p>No tickets found. <a href="/submit_ticket">Create a new ticket</a>.</p>
+    {% endif %}
+  </div>
+</div>
+</div>
+<script>
+  window.onload = function() {
+    const filterBtn = document.getElementById('filterMenuBtn');
+    const filterDropdown = document.getElementById('filterDropdown');
+    const filterOptions = document.querySelectorAll('.filter-option');
+    const ticketTableRows = document.querySelectorAll('#ticketTable tbody tr');
+
+    // Show/hide dropdown on hamburger click
+    filterBtn.addEventListener('click', () => {
+      filterDropdown.style.display = (filterDropdown.style.display === 'block') ? 'none' : 'block';
+    });
+
+    // Close dropdown if clicked outside
+    document.addEventListener('click', (e) => {
+      if (!filterBtn.contains(e.target) && !filterDropdown.contains(e.target)) {
+        filterDropdown.style.display = 'none';
+      }
+    });
+
+    // Default filter on page load - show only 'Open' tickets
+    function filterTickets(status) {
+      ticketTableRows.forEach(row => {
+        if (status === 'All' || row.dataset.status === status) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+
+    // Initial filter - show open tickets
+    filterTickets('Open');
+
+    // Handle clicking filter options
+    filterOptions.forEach(option => {
+      option.addEventListener('click', e => {
+        e.preventDefault();
+        const status = option.dataset.status;
+        filterTickets(status);
+        filterDropdown.style.display = 'none';
+      });
+    });
+  };
+</script>
+
+{% endblock %}

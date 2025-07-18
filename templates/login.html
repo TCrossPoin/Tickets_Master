@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- Top Branding -->
+<div class="login-header">
+    <div class="branding">
+        
+        <span class="app-title">Tickets Master</span>
+    </div>
+</div>
+<div class="login-container">
+    <div class="form-card login-form">
+        <h2 style="color: black;"><i style="color: black;" class="fa-solid fa-right-to-bracket"></i> Login</h2>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, msg in messages %}
+                <div class="flash {{ category }}">{{ msg }}</div>
+            {% endfor %}
+        {% endwith %}
+
+        <form method="POST">
+            <div class="input-group">
+                <i class="fa fa-envelope icon"></i>
+                <input type="email" name="email" placeholder="Email" required>
+            </div>
+
+            <div class="input-group">
+    <i class="fa fa-lock icon"></i>
+    <input type="password" id="login_password" name="password" placeholder="Password" required>
+    <i class="fa fa-eye toggle-password" onclick="togglePassword('login_password')"></i>
+</div>
+
+
+            <button type="submit" class="btn"><i class="fa fa-sign-in-alt"></i> Login</button>
+        </form>
+    </div>
+    <p class="forgot-link"><a href="/forgot-password"style="color: beige;">Forgot Password?</a></p>
+
+
+    <p style="color: black;" class="signup-link">Don't have an account? <a style="color: beige;" href="/signup">Signup here</a></p>
+</div>
+
+
+<script>
+function togglePassword(fieldId) {
+    const field = document.getElementById(fieldId);
+    field.type = field.type === 'password' ? 'text' : 'password';
+}
+</script>
+{% endblock %}

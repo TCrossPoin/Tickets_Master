@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-messages">
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<div class="container">
+  <div class="form-card" style="background-color: rgba(221, 233, 247, 0.884);">
+    <h2 style="color: black"><i class="fa-solid fa-ticket"></i> Ticket #{{ ticket.id }} Details</h2>
+
+    <p><strong>Type:</strong> {{ ticket.ticket_type }}</p>
+    <p><strong>Title:</strong> {{ ticket.title }}</p>
+    <p><strong>Description:</strong> {{ ticket.description }}</p>
+    <p><strong>Status:</strong> {{ ticket.status }}</p>
+    <p><strong>Priority:</strong> {{ ticket.priority }}</p>
+    <p><strong>Raised by:</strong> {{ ticket.raised_by }}</p>
+    <p><strong>Created at:</strong> {{ ticket.created_at }}</p>
+    {% if ticket.assigned_admin %}
+    <p><strong>Assigned to:</strong> {{ ticket.assigned_admin }}</p>
+    {% endif %}
+
+    {% if role == 'user' %}
+  {% if ticket.is_acknowledged_by_admin %}
+    <p style="color: green;"><i class="fa fa-check-circle"></i> This ticket has been acknowledged by the admin.</p>
+  {% else %}
+    <p style="color: red;"><i class="fa fa-hourglass-start"></i> Awaiting acknowledgment from the admin.</p>
+  {% endif %}
+{% endif %}
+
+
+ <!-- Only assigned admin sees these -->
+    {% if role == 'admin' and is_assigned %}
+    {% if not ticket.is_acknowledged_by_admin %}
+    <form method="POST" style="margin-top: 10px;">
+      <input type="hidden" name="acknowledge_ticket" value="1">
+      <button class="btn btn-success" type="submit">
+        <i class="fa fa-check-circle"></i> Acknowledge Ticket
+      </button>
+    </form>
+  {% else %}
+    <p style="color: green;"><i class="fa fa-check-circle"></i> You have acknowledged this ticket.</p>
+  {% endif %}
+ 
+  <form method="POST">
+    <label for="status">Update Status:</label>
+    <select name="status">
+      <option value="Open" {% if ticket.status == 'Open' %}selected{% endif %}>Open</option>
+      <option value="In Progress" {% if ticket.status == 'In Progress' %}selected{% endif %}>In Progress</option>
+      <option value="Resolved" {% if ticket.status == 'Resolved' %}selected{% endif %}>Resolved</option>
+    </select>
+    <button class="btn" type="submit">Update</button>
+  </form>
+
+  <form method="POST" style="margin-top: 10px;">
+    <input type="hidden" name="forward_to_head" value="1">
+    <button class="btn btn-warning" type="submit">
+      <i class="fa fa-share"></i> Forward to Head
+    </button>
+  </form>
+
+
+    {% elif role == 'head' %}
+      <hr>
+      <h4>Assign to Admin:</h4>
+      <form method="POST">
+        <select name="dept_admin" required>
+          <option value="" disabled selected>Select Admin</option>
+          {% for admin in admins %}
+            <option value="{{ admin[0] }}">{{ admin[1] }} ({{ admin[2] }})</option>
+          {% endfor %}
+        </select>
+        <button type="submit" class="btn">Assign</button>
+      </form>
+    {% endif %}
+  </div>
+
+  <!-- Comments Section -->
+  <div class="form-card" style="background-color:  rgba(221, 233, 247, 0.884);;">
+    <h3 style="color: black;">Comments</h3>
+    {% if comments %}
+      {% for comment in comments %}
+        <div class="comment">
+          <p><strong>{{ comment[2] }}</strong> <small>({{ comment[1] }})</small>:</p>
+          <p>{{ comment[0] }}</p>
+          <hr>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>No comments yet.</p>
+    {% endif %}
+
+    <h4 style="color:black;">Add Comment</h4>
+    <form method="POST">
+      <textarea name="comment" rows="4" required></textarea>
+      <button type="submit" class="btn">Post Comment</button>
+    </form>
+  </div>
+
+  <div style="text-align: center; margin-top: 20px;">
+    {% if role == 'admin' %}
+      <a class="btn" href="/admin_dashboard"><i class="fa fa-arrow-left"></i> Back to Admin Dashboard</a>
+    {% elif role == 'head' %}
+      <a class="btn" href="/head_dashboard"><i class="fa fa-arrow-left"></i> Back to Head Dashboard</a>
+    {% else %}
+      <a class="btn" href="/user_dashboard"><i class="fa fa-arrow-left"></i> Back to Dashboard</a>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

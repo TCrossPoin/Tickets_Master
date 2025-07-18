@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container">
+    <div class="form-card">
+        <h2 style="color: black;"><i class="fa-solid fa-ticket"></i> Submit New Ticket</h2>
+
+        <form method="POST">
+            <label style="color: black;"><strong>Type:</strong></label><br>
+            <select name="ticket_type" required>
+                <option value="">Select Type</option>
+                <option value="Request">Request</option>
+                <option value="Issue">Issue</option>
+            </select><br><br>
+
+            <label for="title" style="color: black;"><i class="fa fa-heading"></i><strong> Title:</strong></label>
+            <input type="text" name="title" id="title" required>
+
+            <label for="description" style="color: black;"><i class="fa fa-align-left"></i><strong>Description:</strong> </label>
+            <textarea name="description" id="description" rows="5" required></textarea>
+
+            <label for="priority" style="color: black;"><i class="fa fa-flag"></i> <strong>Priority:</strong></label>
+            <select name="priority" id="priority" required>
+                <option value="">Select Priority</option>
+                <option>Low</option>
+                <option>Medium</option>
+                <option>High</option>
+            </select>
+
+            <label for="assigned_to" style="color:black;"><i class="fa fa-user"></i><strong>Assign to Admin:</strong></label>
+            <select name="assigned_to" id="assigned_to" required>
+                <option value="">-- Select Admin --</option>
+                {% for admin in admins %}
+                    <option value="{{ admin[0] }}">{{ admin[1] }}</option>
+                {% endfor %}
+            </select>
+
+            <button type="submit" class="btn"><i class="fa fa-paper-plane"></i> Submit Ticket</button>
+        </form>
+    </div>
+
+    <div style="text-align: center; margin-top: 20px;">
+        {% if session.get('is_admin') %}
+            <a class="btn" href="/admin_dashboard"><i class="fa fa-arrow-left"></i> Back to Admin Dashboard</a>
+        {% else %}
+            <a class="btn" href="/user_dashboard"><i class="fa fa-arrow-left"></i> Back to Dashboard</a>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
