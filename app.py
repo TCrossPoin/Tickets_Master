@@ -43,18 +43,6 @@ logging.basicConfig(level=logging.INFO)
 # Scheduler
 scheduler = BackgroundScheduler()
 
-# MySQL Connection (single global connection and cursor)
-db = MySQLdb.connect(
-    host=MYSQL_HOST,
-    user=MYSQL_USER,
-    passwd=MYSQL_PASSWORD,
-    db=MYSQL_DB,
-    charset='utf8mb4'
-)
-cursor = db.cursor()
-
-mail = Mail(app)  # Setup Flask-Mail if needed
-
 # Home route redirects to login
 @app.route('/')
 def home():
