@@ -219,7 +219,6 @@ def reset_password(token):
     print("Flashed messages:", get_flashed_messages(with_categories=True))
     return render_template('reset_password.html')
 
-
 @app.route('/admin_dashboard')
 def admin_dashboard():
     if 'user_id' not in session or session.get('role') != 'admin':
@@ -245,7 +244,6 @@ def admin_dashboard():
         tickets=tickets,
         name=session.get('name')
     )
-
 
 @app.route('/submit_ticket', methods=['GET', 'POST'])
 def submit_ticket():
@@ -453,7 +451,7 @@ def view_ticket(ticket_id):
     # Fetch ticket details
     cursor.execute("""
         SELECT t.id, t.title, t.description, t.status, t.priority, u.name, t.created_at, t.ticket_type,
-               a.name, t.assigned_to, t.forwarded_to_head, t.created_by, t.is_acknowledged_by_admin
+               a.name, t.assigned_to, t.forwarded_to_head, t.created_by, t.is_acknowledged_by_admin, t.closed_at
         FROM tickets t
         LEFT JOIN users u ON t.created_by = u.id
         LEFT JOIN users a ON t.assigned_to = a.id
@@ -478,7 +476,8 @@ def view_ticket(ticket_id):
         'assigned_to': ticket[9],
         'forwarded_to_head': ticket[10],
         'created_by': ticket[11],
-        'is_acknowledged_by_admin': ticket[12]
+        'is_acknowledged_by_admin': ticket[12],
+        'closed_at': ticket[13]
     }
 
     # Check role-based access
@@ -547,20 +546,36 @@ def view_ticket(ticket_id):
         # ✅ Update Status (Admin)
         if role == 'admin' and 'status' in request.form:
             new_status = request.form['status']
-            cursor.execute("UPDATE tickets SET status = %s WHERE id = %s", (new_status, ticket_id))
+
+            # If status is changed to 'Resolved', set closed_at timestamp
+            if new_status == 'Resolved':
+                cursor.execute("""
+                UPDATE tickets 
+                SET status = %s, closed_at = NOW() 
+                WHERE id = %s
+                 """, (new_status, ticket_id))
+            else:
+                cursor.execute("""
+                UPDATE tickets 
+                SET status = %s 
+                WHERE id = %s
+            """, (new_status, ticket_id))
+
             db.commit()
 
-            # Notify ticket creator
+            # Notify user
             cursor.execute("SELECT email, name FROM users WHERE id = %s", (ticket_data['created_by'],))
             user_email, creator_name = cursor.fetchone()
+
             send_email(
-                user_email,
-                f"Ticket #{ticket_id} Status Updated",
-                f"Hello {creator_name},\n\nYour ticket status has been updated to: {new_status} by {sender_name}."
-            )
+            user_email,
+            f"Ticket #{ticket_id} Status Updated",
+            f"Hello {creator_name},\n\nYour ticket status has been updated to: {new_status} by {sender_name}."
+     )
 
             flash("Status updated.", "success")
             return redirect(url_for('view_ticket', ticket_id=ticket_id))
+
 
         # ✅ Forward to Head
         if role == 'admin' and 'forward_to_head' in request.form:
