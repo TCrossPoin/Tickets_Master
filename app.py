@@ -174,6 +174,7 @@ def forgot_password():
             flash("Reset link sent to your email.", "info")
         else:
             flash("Email not found.", "danger")
+            return redirect(url_for('login'))
     print("Flashed messages:", get_flashed_messages(with_categories=True))
     return render_template('forgot_password.html')
 @app.route('/reset-password/<token>', methods=['GET', 'POST'])
